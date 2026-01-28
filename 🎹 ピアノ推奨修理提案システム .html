@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ピアノ推奨修理提案システム・完全網羅版</title>
+    <style>
+        :root { --main-blue: #004098; --bg-color: #f4f7f9; --save-green: #2e7d32; }
+        body { font-family: "MS UI Gothic", sans-serif; margin: 0; padding: 20px; background: var(--bg-color); }
+        .no-print { max-width: 1100px; margin: 0 auto 30px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .setup-box { background: #eef2f7; padding: 15px; border-radius: 6px; border-left: 5px solid var(--main-blue); margin-bottom: 20px; }
+        .tab-btn { padding: 10px 20px; cursor: pointer; border: none; background: #ddd; }
+        .tab-btn.active { background: var(--main-blue); color: white; }
+        .edit-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
+        .edit-table th, .edit-table td { border: 1px solid #ccc; padding: 4px; }
+        .edit-table textarea { width: 100%; height: 50px; resize: vertical; }
+        .print-area { background: white; width: 210mm; min-height: 297mm; margin: 0 auto; padding: 15mm; box-sizing: border-box; }
+        .proposal-table { width: 100%; border-collapse: collapse; margin-top: 20px; table-layout: fixed; }
+        .proposal-table th, .proposal-table td { border: 1px solid #000; padding: 8px; font-size: 12px; line-height: 1.4; word-wrap: break-word; }
+        .proposal-table th { background: #f2f2f2; }
+        .price-input { width: 90%; border: 1px dotted #ccc; text-align: right; background: transparent; }
+        .desc-edit { width: 100%; border: none; font-family: inherit; font-size: inherit; resize: none; background: transparent; overflow: hidden; width: 100%; }
+        .admin-btn { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; color: white; font-weight: bold; margin-right: 5px; }
+        @media print { .no-print { display: none !important; } .print-area { margin: 0; width: 100%; border: none; padding: 0; } .price-input { border: none; } }
+    </style>
+</head>
+<body>
+
+<div class="no-print">
+    <h1>ピアノ推奨修理提案システム</h1>
+    <div style="margin-bottom: 10px;">
+        <button id="tab-p" class="tab-btn active" onclick="switchTab('proposal')">1. 提案書作成</button>
+        <button id="tab-m" class="tab-btn" onclick="switchTab('master')">2. マスターデータ管理</button>
+    </div>
+
+    <div id="view-proposal">
+        <div class="setup-box">
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <select id="type-select" onchange="updateDropdown()" style="width:120px; padding:8px;">
+                    <option value="GP">GP用</option>
+                    <option value="UP">UP用</option>
+                </select>
+                <select id="master-select" style="flex: 2; padding:8px;"></select>
+                <button onclick="addFromMaster()" style="padding: 10px 20px; background: var(--main-blue); color: white; border: none; cursor: pointer; border-radius: 4px;">追加</button>
+            </div>
+            <input type="text" id="cust-input" placeholder="お客様名を入力" style="width: 300px; padding: 8px;">
+        </div>
+        <button onclick="window.print()" style="background: #f57c00; color: white; padding: 15px; border: none; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px;">提案書を印刷 / PDF保存</button>
+    </div>
+
+    <div id="view-master" style="display: none;">
+        <div class="setup-box" style="border-left-color: var(--save-green);">
+            <h3>マスターデータの更新</h3>
+            <div style="margin: 15px 0;">
+                <button onclick="addNewMasterRow()" class="admin-btn" style="background:#666;">＋ 行追加</button>
+                <button onclick="downloadUpdatedHTML()" class="admin-btn" style="background:var(--save-green);">💾 HTMLファイルを書き出し</button>
+            </div>
+            <table class="edit-table">
+                <thead><tr><th>種別</th><th>項目名</th><th>説明</th><th>No</th><th>消</th></tr></thead>
+                <tbody id="master-edit-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="print-area">
+    <div style="text-align: center; border-bottom: 2px solid #000; margin-bottom: 20px;"><h1 style="margin: 0; font-size: 18px;">環境及び経年劣化への対応（推奨修理のご案内）</h1></div>
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:15px;">
+        <h2 id="view-cust" style="border-bottom: 1px solid #000; min-width: 250px; margin: 0;">＿＿＿＿ 様</h2>
+        <div style="font-size: 12px;">作成日: <span id="view-date"></span></div>
+    </div>
+    <table class="proposal-table">
+        <thead><tr><th style="width:25%;">推奨される処理・項目</th><th style="width:45%;">内容説明・期待される効果</th><th style="width:10%;">No</th><th style="width:20%;">概算費用(税込)</th><th class="no-print" style="width:40px;">消</th></tr></thead>
+        <tbody id="proposal-body"></tbody>
+    </table>
+</div>
+
+<script>
+const defaultMaster = [
+  /* --- GP ハンマー交換 --- */
+  {"type":"GP","name":"ハンマー交換(シャンク付) A1R/A1L/A1S/A1/EA1/Z1 1台","desc":"専用ハンマーをシャンク毎交換。小型ながら力強い響きを再生します。","no":"1-11"},
+  {"type":"GP","name":"ハンマー交換(シャンク付) C1/C1L/C1X/GC1 1台","desc":"設計に最適化されたハンマーで、バランスの良い明瞭な音色を復活させます。","no":"1-11"},
+  {"type":"GP","name":"ハンマー交換(シャンク付) C2/C2L/C2X 1台","desc":"中型モデルの豊かな響きを支える高品質ハンマーへと刷新します。","no":"1-11"},
+  {"type":"GP","name":"ハンマー交換(シャンク付) C3/C3L/C3X/C3AE 1台","desc":"主力モデルの表現力を最大限に引き出すため、厳選されたハンマーへ一新します。","no":"1-11"},
+  {"type":"GP","name":"ハンマー交換(シャンク付) C5/C5L/C5X 1台","desc":"深みのある音色を維持するため、弾力性に優れた新品ハンマーへ交換します。","no":"1-11"},
+  {"type":"GP","name":"ハンマー交換(シャンク付) C6/C7/C6X/C7X 1台","desc":"大型モデル特有の重厚な響きを支える高品質なハンマーへと刷新します。","no":"1-11"},
+  {"type":"GP","name":"ハンマー交換(シャンク付) S4/S400B/S4B 1台","desc":"プレミアムモデル専用の精密なハンマーにより、至高のタッチを再現します。","no":"1-11"},
+  {"type":"GP","name":"ハンマー交換(シャンク付) S6/S600B/S6B 1台","desc":"演奏家の要求に応える高品位ハンマーにより、圧倒的な響きを再生します。","no":"1-11"},
+  {"type":"GP","name":"ハンマー交換(シャンク付) CF/CF3/CF3S/CFX 1台","desc":"最高峰の演奏に応えるため、極めて精度の高いハンマーへと刷新します。","no":"1-11"},
+  /* --- GP アクション・鍵盤 --- */
+  {"type":"GP","name":"ハンマー整形 1台","desc":"弦跡による音の硬さを削り取り、発音をクリアにします。","no":"1"},
+  {"type":"GP","name":"ハンマーシャンクASSY交換 C1～C5 1台","desc":"フレンジを含むシャンク全体を交換。タッチのバラツキを解消します。","no":"5-11"},
+  {"type":"GP","name":"サポートAssy交換 1台","desc":"連打の要であるレペティション機構を一新し、レスポンスを向上させます。","no":"20-40"},
+  {"type":"GP","name":"センターピン取替 1台","desc":"関節部の摩擦を適正化。戻り不良やスティックを解消します。","no":"10"},
+  {"type":"GP","name":"フロントブッシングクロス貼り換え 1台","desc":"鍵盤の左右ガタつきを抑え、指先の力を正確に伝えます。","no":"67"},
+  {"type":"GP","name":"バランスブッシングクロス貼り換え 1台","desc":"鍵盤の支点を安定させ、正確なタッチコントロールを可能にします。","no":"68"},
+  {"type":"GP","name":"白鍵貼り換え(アクリライト) 1台","desc":"変色やヒビを解消し、清潔感と指なじみの良い質感にします。","no":"85"},
+  {"type":"GP","name":"象牙貼り換え 1台","desc":"天然素材による吸湿性と独特のタッチ感を維持します。","no":"84"},
+  {"type":"GP","name":"黒檀貼り換え 1台","desc":"天然黒檀を使用し、滑りにくく重厚な質感の黒鍵に仕上げます。","no":"83"},
+  /* --- GP 弦・ペダル・本体 --- */
+  {"type":"GP","name":"巻線張替 G1～C3 1台","desc":"低音の「うなり」を解消し、深い響きを蘇らせます。","no":"32"},
+  {"type":"GP","name":"芯線張替 C3・5 1台","desc":"金属疲労した弦を刷新し、透明感のある響きを取り戻します。","no":"31"},
+  {"type":"GP","name":"チューニングピン交換 1台","desc":"ピンの保持力を向上させ、調律の安定性を高めます。","no":"30"},
+  {"type":"GP","name":"ダンパーフェルト貼り換え 1台","desc":"止音不良を解消し、クリアな演奏を可能にします。","no":"50"},
+  {"type":"GP","name":"クリーニング GP黒塗り","desc":"外装の汚れやくすみを磨き上げ、本来の光沢を蘇らせます。","no":"-"},
+  /* --- UP全般 --- */
+  {"type":"UP","name":"ハンマー交換 1台 (121cm以下)","desc":"硬化したハンマーを交換。明るく芯のある音色を再生します。","no":"56-57"},
+  {"type":"UP","name":"ハンマー交換 1台 (131cm以上)","desc":"大型モデルの豊かな響きを支える高品質ハンマーへ一新します。","no":"56-57"},
+  {"type":"UP","name":"バットスプリングコード取換 1台","desc":"経年劣化で切れやすいコードを貼り換え、戻り不良を防ぎます。","no":"60"},
+  {"type":"UP","name":"ブライドルテープ取換 1台","desc":"アクションの連動性を高め、連打性能を向上させます。","no":"21"},
+  {"type":"UP","name":"センターピン取替 1台","desc":"関節部のスティックを解消し、スムーズな動きに戻します。","no":"10"},
+  {"type":"UP","name":"ダンパーレバーフレンジコード取換 1台","desc":"止音機構の動作を正常化し、音の濁りを解消します。","no":"61"},
+  {"type":"UP","name":"マフラーフェルト交換 1台","desc":"弱音時の音色を心地よい柔らかさに整えます。","no":"12"},
+  {"type":"UP","name":"フロントブッシングクロス貼換 1台","desc":"鍵盤の遊びを適正化し、安定したタッチを再生します。","no":"27"},
+  {"type":"UP","name":"巻線張替 1台","desc":"錆びた低音弦を張り替え、重厚な響きを復活させます。","no":"32"},
+  {"type":"UP","name":"外装クリーニング(UP黒塗り)","desc":"専門の磨き工程で外装の鏡面光沢を再生します。","no":"クリーニング"}
+];
+
+let myData = [...defaultMaster];
+
+function switchTab(tab) {
+    document.getElementById('view-proposal').style.display = tab === 'proposal' ? 'block' : 'none';
+    document.getElementById('view-master').style.display = tab === 'master' ? 'block' : 'none';
+    document.getElementById('tab-p').className = 'tab-btn' + (tab === 'proposal' ? ' active' : '');
+    document.getElementById('tab-m').className = 'tab-btn' + (tab === 'master' ? ' active' : '');
+    if(tab === 'master') renderMasterEditor();
+}
+
+function renderMasterEditor() {
+    const body = document.getElementById('master-edit-body');
+    body.innerHTML = '';
+    myData.forEach((item, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><select onchange="myData[${idx}].type=this.value"><option value="GP" ${item.type==='GP'?'selected':''}>GP</option><option value="UP" ${item.type==='UP'?'selected':''}>UP</option></select></td>
+            <td><input type="text" value="${item.name}" onchange="myData[${idx}].name=this.value" style="width:95%"></td>
+            <td><textarea onchange="myData[${idx}].desc=this.value">${item.desc||''}</textarea></td>
+            <td><input type="text" value="${item.no}" onchange="myData[${idx}].no=this.value" style="width:90%"></td>
+            <td><button onclick="myData.splice(${idx},1); renderMasterEditor();">×</button></td>
+        `;
+        body.appendChild(tr);
+    });
+}
+
+function downloadUpdatedHTML() {
+    const dataString = JSON.stringify(myData, null, 2);
+    let htmlContent = document.documentElement.outerHTML;
+    htmlContent = htmlContent.replace(/const defaultMaster = \[[\s\S]*?\];/, `const defaultMaster = ${dataString};`);
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'piano_system_full.html';
+    a.click();
+}
+
+function updateDropdown() {
+    const type = document.getElementById('type-select').value;
+    const select = document.getElementById('master-select');
+    select.innerHTML = '';
+    myData.filter(d => d.type === type).forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = JSON.stringify(item);
+        opt.text = item.name;
+        select.appendChild(opt);
+    });
+}
+
+function addFromMaster() {
+    const val = document.getElementById('master-select').value;
+    if(!val) return;
+    const item = JSON.parse(val);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td contenteditable="true">${item.name}</td>
+        <td><textarea class="desc-edit" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'">${item.desc||''}</textarea></td>
+        <td contenteditable="true" style="text-align:center">${item.no}</td>
+        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
+        <td class="no-print" style="text-align:center"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer;">×</button></td>
+    `;
+    document.getElementById('proposal-body').appendChild(tr);
+    const ta = tr.querySelector('textarea');
+    ta.style.height = ta.scrollHeight + 'px';
+}
+
+function addNewMasterRow() {
+    myData.unshift({type: "GP", name: "", desc: "", no: ""});
+    renderMasterEditor();
+}
+
+window.onload = () => {
+    updateDropdown();
+    document.getElementById('view-date').innerText = new Date().toLocaleDateString();
+};
+
+document.getElementById('cust-input').oninput = function() {
+    document.getElementById('view-cust').innerText = (this.value || "＿＿＿＿") + " 様";
+};
+</script>
+</body>
+</html>
