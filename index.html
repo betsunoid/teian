@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja"><head>
     <meta charset="UTF-8">
-    <title>ピアノ修理提案システム・全データ搭載版</title>
+    <title>ピアノ修理提案システム</title>
     <style>
         :root { --main-blue: #004098; --save-green: #2e7d32; --add-blue: #1976d2; }
         body { font-family: "MS UI Gothic", sans-serif; margin: 20px; background: #f4f7f9; }
@@ -12,15 +12,11 @@
         .edit-table th, .edit-table td { border: 1px solid #ccc; padding: 8px; font-size: 11px; }
         .type-select-master { width: 100%; padding: 5px; background: #fffde7; font-weight: bold; border: 1px solid #fbc02d; }
         .edit-table input, .edit-table textarea { width: 95%; padding: 5px; font-family: inherit; }
-        
         .print-area { background: white; width: 210mm; min-height: 297mm; margin: 0 auto; padding: 15mm; border: 1px solid #ddd; }
         .proposal-table { width: 100%; border-collapse: collapse; margin-top: 20px; table-layout: fixed; }
         .proposal-table th, .proposal-table td { border: 1px solid #000; padding: 10px; font-size: 13px; vertical-align: top; line-height: 1.4; }
         .price-input { width: 90%; border: none; border-bottom: 1px dotted #666; text-align: right; font-size: 13px; }
-        
-        /* 文言追加エリア */
         .notes-area { margin-top: 15px; font-size: 12px; line-height: 1.6; }
-
         @media print { .no-print { display: none !important; } .print-area { border: none; padding: 0; width: 100%; } }
     </style>
 </head>
@@ -38,739 +34,34 @@
         <select id="sel-type" onchange="updateDrop()" style="padding:8px;">
             <option value="GP">GP</option>
             <option value="UP">UP</option>
-            <option value="自動演奏/HQ">自動演奏/HQ</option>
+            <option value="ハイブリッド">ハイブリッド</option>
             <option value="共通">共通</option>
         </select>
-        項目: <select id="sel-item" style="width:450px; padding:8px;"><option>ハンマー交換(シャンク付) A1R/A1L/A1S/A1/EA1/Z1 1台</option><option>ハンマー交換(シャンク付) C1/C1L/C1X/GC1 1台</option><option>ハンマー交換(シャンク付) C2/C2L/C2X 1台</option><option>ハンマー交換(シャンク付) C3 1台</option><option>ハンマー交換(シャンク付) C5/C5L/C5X 1台</option><option>ハンマー交換(シャンク付) C6/C7/C6X/C7X 1台</option><option>ハンマー交換(シャンク付) S4/S400B/S4B 1台</option><option>ハンマー交換(シャンク付) S6/S600B/S6B 1台</option><option>ハンマー交換(シャンク付) CF/CF3/CF3S/CFX 1台</option><option>鍵盤全面刷新パック</option><option>ハンマー整形（ファイリング）</option><option>ハンマーシャンクASSY交換 C1～C5 1台</option><option>サポートAssy交換 1台</option><option>ローラー交換</option><option>センターピン取替 1台</option><option>フロントブッシングクロス貼り換え 1台</option><option>バランスブッシングクロス貼り換え 1台</option><option>白鍵貼り換え(アクリライト) 1台</option><option>象牙貼り換え 1台</option><option>黒檀貼り換え 1台</option><option>整調（全体精密調整）</option><option>整音（針入れ・ヴォイシング）</option><option>巻線張替 ～C５ 1台</option><option>弦全体張替　C3 1台</option><option>チューニングピン交換 1台</option><option>ダンパーフェルト貼り換え 1台</option><option>ダンパーレバー・ストップレールの調整</option><option>ペダル軸受交換</option></select>
+        項目: <select id="sel-item" style="width:450px; padding:8px;"><option value="ハンマー交換(シャンク付) A1R/A1L/A1S/A1/EA1/Z1 1台">ハンマー交換(シャンク付) A1R/A1L/A1S/A1/EA1/Z1 1台</option><option value="ハンマー交換(シャンク付) C1/C1L/C1X/GC1 1台">ハンマー交換(シャンク付) C1/C1L/C1X/GC1 1台</option><option value="ハンマー交換(シャンク付) C2/C2L/C2X 1台">ハンマー交換(シャンク付) C2/C2L/C2X 1台</option><option value="ハンマー交換(シャンク付) C3 1台">ハンマー交換(シャンク付) C3 1台</option><option value="ハンマー交換(シャンク付) C5/C5L/C5X 1台">ハンマー交換(シャンク付) C5/C5L/C5X 1台</option><option value="ハンマー交換(シャンク付) C6/C7/C6X/C7X 1台">ハンマー交換(シャンク付) C6/C7/C6X/C7X 1台</option><option value="ハンマー交換(シャンク付) S4/S400B/S4B 1台">ハンマー交換(シャンク付) S4/S400B/S4B 1台</option><option value="ハンマー交換(シャンク付) S6/S600B/S6B 1台">ハンマー交換(シャンク付) S6/S600B/S6B 1台</option><option value="ハンマー交換(シャンク付) CF/CF3/CF3S/CFX 1台">ハンマー交換(シャンク付) CF/CF3/CF3S/CFX 1台</option><option value="鍵盤全面刷新パック">鍵盤全面刷新パック</option><option value="ハンマー整形（ファイリング）">ハンマー整形（ファイリング）</option><option value="ハンマーシャンクASSY交換 C1～C5 1台">ハンマーシャンクASSY交換 C1～C5 1台</option><option value="サポートAssy交換 1台">サポートAssy交換 1台</option><option value="ローラー交換">ローラー交換</option><option value="センターピン取替 1台">センターピン取替 1台</option><option value="フロントブッシングクロス貼り換え 1台">フロントブッシングクロス貼り換え 1台</option><option value="バランスブッシングクロス貼り換え 1台">バランスブッシングクロス貼り換え 1台</option><option value="白鍵貼り換え(アクリライト) 1台">白鍵貼り換え(アクリライト) 1台</option><option value="象牙貼り換え 1台">象牙貼り換え 1台</option><option value="黒檀貼り換え 1台">黒檀貼り換え 1台</option><option value="整調（全体精密調整）">整調（全体精密調整）</option><option value="整音（針入れ・ヴォイシング）">整音（針入れ・ヴォイシング）</option><option value="巻線張替 ～C５ 1台">巻線張替 ～C５ 1台</option><option value="弦全体張替　C3 1台">弦全体張替　C3 1台</option><option value="チューニングピン交換 1台">チューニングピン交換 1台</option><option value="ダンパーフェルト貼り換え 1台">ダンパーフェルト貼り換え 1台</option><option value="ダンパーレバー・ストップレールの調整">ダンパーレバー・ストップレールの調整</option><option value="ペダル軸受交換">ペダル軸受交換</option></select>
         <button onclick="addFromSelect()" style="padding:8px 20px; background:var(--main-blue); color:white; border:none; border-radius:4px; cursor:pointer;">追加</button>
         <button onclick="window.print()" style="margin-left:30px; background:#f57c00; color:white; padding:8px 20px; border:none; border-radius:4px; cursor:pointer;">📄 印刷・pdf保存</button>
     </div>
 
     <div id="v-m" style="display: block; padding: 20px; border: 1px solid rgb(204, 204, 204); background: white; border-radius: 0px 0px 8px 8px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <button onclick="addNewItem()" style="padding: 12px 25px; background: var(--add-blue); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">＋ 新規修理項目を末尾に追加</button>
+            <button onclick="addNewItem()" style="padding: 12px 25px; background: var(--add-blue); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">＋ 新規修理項目を追加</button>
             <button onclick="saveToFile()" style="padding: 12px 25px; background: var(--save-green); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">💾 原本を更新して保存</button>
         </div>
         <table class="edit-table">
             <thead><tr style="background:#eee;"><th style="width:110px;">種別</th><th>修理項目名</th><th>説明文</th><th style="width:60px;">No</th><th style="width:40px;">消</th></tr></thead>
-            <tbody id="m-body"><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[0].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ハンマー交換(シャンク付) A1R/A1L/A1S/A1/EA1/Z1 1台" oninput="myData[0].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[0].desc=this.value" style="height:45px">専用ハンマーをシャンク毎交換。小型ながら力強い響きを再生します。</textarea></td>
-            <td><input type="text" value="1-11" oninput="myData[0].no=this.value"></td>
-            <td><button onclick="deleteRow(0)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[1].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ハンマー交換(シャンク付) C1/C1L/C1X/GC1 1台" oninput="myData[1].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[1].desc=this.value" style="height:45px">設計に最適化されたハンマーで、バランスの良い明瞭な音色を復活させます。</textarea></td>
-            <td><input type="text" value="1-11" oninput="myData[1].no=this.value"></td>
-            <td><button onclick="deleteRow(1)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[2].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ハンマー交換(シャンク付) C2/C2L/C2X 1台" oninput="myData[2].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[2].desc=this.value" style="height:45px">中型モデルの豊かな響きを支える高品質ハンマーへと刷新します。</textarea></td>
-            <td><input type="text" value="1-11" oninput="myData[2].no=this.value"></td>
-            <td><button onclick="deleteRow(2)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[3].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ハンマー交換(シャンク付) C3 1台" oninput="myData[3].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[3].desc=this.value" style="height:45px">主力モデルの表現力を最大限に引き出すため、厳選されたハンマーへ一新します。</textarea></td>
-            <td><input type="text" value="1-11" oninput="myData[3].no=this.value"></td>
-            <td><button onclick="deleteRow(3)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[4].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ハンマー交換(シャンク付) C5/C5L/C5X 1台" oninput="myData[4].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[4].desc=this.value" style="height:45px">深みのある音色を維持するため、弾力性に優れた新品ハンマーへ交換します。</textarea></td>
-            <td><input type="text" value="1-11" oninput="myData[4].no=this.value"></td>
-            <td><button onclick="deleteRow(4)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[5].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ハンマー交換(シャンク付) C6/C7/C6X/C7X 1台" oninput="myData[5].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[5].desc=this.value" style="height:45px">大型モデル特有の重厚な響きを支える高品質なハンマーへと刷新します。</textarea></td>
-            <td><input type="text" value="1-11" oninput="myData[5].no=this.value"></td>
-            <td><button onclick="deleteRow(5)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[6].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ハンマー交換(シャンク付) S4/S400B/S4B 1台" oninput="myData[6].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[6].desc=this.value" style="height:45px">プレミアムモデル専用の精密なハンマーにより、至高のタッチ、音質を再生します。</textarea></td>
-            <td><input type="text" value="1-11" oninput="myData[6].no=this.value"></td>
-            <td><button onclick="deleteRow(6)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[7].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ハンマー交換(シャンク付) S6/S600B/S6B 1台" oninput="myData[7].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[7].desc=this.value" style="height:45px">演奏家の要求に応える高品位ハンマーにより、圧倒的な響きを再生します。</textarea></td>
-            <td><input type="text" value="1-11" oninput="myData[7].no=this.value"></td>
-            <td><button onclick="deleteRow(7)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[8].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ハンマー交換(シャンク付) CF/CF3/CF3S/CFX 1台" oninput="myData[8].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[8].desc=this.value" style="height:45px">最高峰の演奏に応えるため、極めて精度の高いハンマーへと刷新します。</textarea></td>
-            <td><input type="text" value="1-11" oninput="myData[8].no=this.value"></td>
-            <td><button onclick="deleteRow(8)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[9].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="鍵盤全面刷新パック" oninput="myData[9].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[9].desc=this.value" style="height:45px">鍵盤本体に加え、バックチェック、ブッシング、パンチング、キャブスタンスクリューを同時刷新。ヤマハ本来の理想的な設計値へとリセットし、新車のような完璧な操作感を再生します。</textarea></td>
-            <td><input type="text" value="78-90" oninput="myData[9].no=this.value"></td>
-            <td><button onclick="deleteRow(9)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[10].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ハンマー整形（ファイリング）" oninput="myData[10].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[10].desc=this.value" style="height:45px">フエルト製ハンマーで金属弦を打つことでできた弦跡、変形、により起こる音の硬さを削り取り、理想的な卵型に整えます。</textarea></td>
-            <td><input type="text" value="1" oninput="myData[10].no=this.value"></td>
-            <td><button onclick="deleteRow(10)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[11].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ハンマーシャンクASSY交換 C1～C5 1台" oninput="myData[11].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[11].desc=this.value" style="height:45px">フレンジを含むシャンク全体を交換。タッチのバラツキを解消します。</textarea></td>
-            <td><input type="text" value="5-11" oninput="myData[11].no=this.value"></td>
-            <td><button onclick="deleteRow(11)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[12].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="サポートAssy交換 1台" oninput="myData[12].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[12].desc=this.value" style="height:45px">連打の要であるレペティション機構を一新し、レスポンスを向上させます。</textarea></td>
-            <td><input type="text" value="" oninput="myData[12].no=this.value"></td>
-            <td><button onclick="deleteRow(12)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[13].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ローラー交換" oninput="myData[13].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[13].desc=this.value" style="height:45px">鍵盤の力をハンマーに伝える接点部品を交換。スムーズな連打が可能になります。</textarea></td>
-            <td><input type="text" value="6" oninput="myData[13].no=this.value"></td>
-            <td><button onclick="deleteRow(13)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[14].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="センターピン取替 1台" oninput="myData[14].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[14].desc=this.value" style="height:45px">部品を繋ぐ関節部の摩擦を適正化。戻り不良やスティックを解消します。</textarea></td>
-            <td><input type="text" value="" oninput="myData[14].no=this.value"></td>
-            <td><button onclick="deleteRow(14)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[15].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="フロントブッシングクロス貼り換え 1台" oninput="myData[15].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[15].desc=this.value" style="height:45px">鍵盤の左右ガタつきを抑え、指先の力を正確に伝えます。</textarea></td>
-            <td><input type="text" value="87" oninput="myData[15].no=this.value"></td>
-            <td><button onclick="deleteRow(15)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[16].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="バランスブッシングクロス貼り換え 1台" oninput="myData[16].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[16].desc=this.value" style="height:45px">鍵盤の支点を安定させ、正確なタッチコントロールを可能にします。</textarea></td>
-            <td><input type="text" value="86" oninput="myData[16].no=this.value"></td>
-            <td><button onclick="deleteRow(16)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[17].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="白鍵貼り換え(アクリライト) 1台" oninput="myData[17].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[17].desc=this.value" style="height:45px">変色やヒビを解消し、清潔感と指なじみの良い質感にします。</textarea></td>
-            <td><input type="text" value="88" oninput="myData[17].no=this.value"></td>
-            <td><button onclick="deleteRow(17)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[18].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="象牙貼り換え 1台" oninput="myData[18].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[18].desc=this.value" style="height:45px">天然素材による吸湿性と独特のタッチ感を維持します。</textarea></td>
-            <td><input type="text" value="90" oninput="myData[18].no=this.value"></td>
-            <td><button onclick="deleteRow(18)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[19].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="黒檀貼り換え 1台" oninput="myData[19].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[19].desc=this.value" style="height:45px">天然素材を使用し、滑りにくく重厚な質感の黒鍵に仕上げます。</textarea></td>
-            <td><input type="text" value="90" oninput="myData[19].no=this.value"></td>
-            <td><button onclick="deleteRow(19)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[20].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="整調（全体精密調整）" oninput="myData[20].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[20].desc=this.value" style="height:45px">鍵盤の高さ、深さ、ハンマーの動きを調整します。均一な重さと一体感が戻ります。</textarea></td>
-            <td><input type="text" value="-" oninput="myData[20].no=this.value"></td>
-            <td><button onclick="deleteRow(20)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[21].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="整音（針入れ・ヴォイシング）" oninput="myData[21].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[21].desc=this.value" style="height:45px">ハンマーの弾力を精密に調整。深みのある豊かな響きを可能にします。</textarea></td>
-            <td><input type="text" value="1" oninput="myData[21].no=this.value"></td>
-            <td><button onclick="deleteRow(21)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[22].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="巻線張替 ～C５ 1台" oninput="myData[22].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[22].desc=this.value" style="height:45px">低音の「がなり」を解消し、深い響きを蘇らせます。</textarea></td>
-            <td><input type="text" value="" oninput="myData[22].no=this.value"></td>
-            <td><button onclick="deleteRow(22)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[23].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="弦全体張替　C3 1台" oninput="myData[23].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[23].desc=this.value" style="height:45px">金属疲労した弦を刷新し、透明感のある響きを取り戻します。</textarea></td>
-            <td><input type="text" value="" oninput="myData[23].no=this.value"></td>
-            <td><button onclick="deleteRow(23)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[24].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="チューニングピン交換 1台" oninput="myData[24].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[24].desc=this.value" style="height:45px">ピンの保持力を向上させ、調律の安定性を高めます。</textarea></td>
-            <td><input type="text" value="" oninput="myData[24].no=this.value"></td>
-            <td><button onclick="deleteRow(24)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[25].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ダンパーフェルト貼り換え 1台" oninput="myData[25].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[25].desc=this.value" style="height:45px">止音不良を解消し、クリアな演奏を可能にします。</textarea></td>
-            <td><input type="text" value="50" oninput="myData[25].no=this.value"></td>
-            <td><button onclick="deleteRow(25)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[26].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP" selected="">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ハンマー交換 1台 (121cm以下)" oninput="myData[26].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[26].desc=this.value" style="height:45px">硬化したハンマーを交換。豊かで芯のある音色を再生します。</textarea></td>
-            <td><input type="text" value="6-8" oninput="myData[26].no=this.value"></td>
-            <td><button onclick="deleteRow(26)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[27].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP" selected="">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ハンマー交換 1台 (131cm以上)" oninput="myData[27].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[27].desc=this.value" style="height:45px">硬化したハンマーを交換。豊かで芯のある音色を再生します。</textarea></td>
-            <td><input type="text" value="6-8" oninput="myData[27].no=this.value"></td>
-            <td><button onclick="deleteRow(27)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[28].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP" selected="">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="バットスプリングコード取換 1台" oninput="myData[28].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[28].desc=this.value" style="height:45px">結露や経年劣化で切れやすいシルク製コードを貼り換え、ハンマーの戻り不良を確実に防ぎます。</textarea></td>
-            <td><input type="text" value="38" oninput="myData[28].no=this.value"></td>
-            <td><button onclick="deleteRow(28)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[29].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP" selected="">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ブライドルテープ取換 1台" oninput="myData[29].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[29].desc=this.value" style="height:45px">アクションの連動性を高め、連打性能と確実な動作を回復させます。</textarea></td>
-            <td><input type="text" value="23" oninput="myData[29].no=this.value"></td>
-            <td><button onclick="deleteRow(29)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[30].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP" selected="">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="センターピン取替 1台" oninput="myData[30].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[30].desc=this.value" style="height:45px">部品を繋ぐ関節部の潤滑不良を解消し、スムーズな動きに戻します。</textarea></td>
-            <td><input type="text" value="" oninput="myData[30].no=this.value"></td>
-            <td><button onclick="deleteRow(30)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[31].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP" selected="">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ダンパーレバーフレンジコード取換 1台" oninput="myData[31].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[31].desc=this.value" style="height:45px">止音機構の動作を正常化し、音の濁りを解消します。</textarea></td>
-            <td><input type="text" value="37" oninput="myData[31].no=this.value"></td>
-            <td><button onclick="deleteRow(31)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[32].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP" selected="">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="マフラーフェルト交換 1台" oninput="myData[32].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[32].desc=this.value" style="height:45px">弱音時の音色を心地よい柔らかさに整えます。</textarea></td>
-            <td><input type="text" value="100" oninput="myData[32].no=this.value"></td>
-            <td><button onclick="deleteRow(32)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[33].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP" selected="">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="フロントブッシングクロス貼換 1台" oninput="myData[33].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[33].desc=this.value" style="height:45px">鍵盤の左右ガタと遊びを適正化し、安定したタッチを再生します。</textarea></td>
-            <td><input type="text" value="27" oninput="myData[33].no=this.value"></td>
-            <td><button onclick="deleteRow(33)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[34].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP" selected="">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="巻線張替 1台" oninput="myData[34].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[34].desc=this.value" style="height:45px">錆びたり硬化した低音弦を張り替え、重厚な響きを復活させます。</textarea></td>
-            <td><input type="text" value="32" oninput="myData[34].no=this.value"></td>
-            <td><button onclick="deleteRow(34)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[35].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ" selected="">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="筬後ろクッションライニング刷新" oninput="myData[35].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[35].desc=this.value" style="height:45px">HQシリーズの劣化ポイント。圧縮変形した部品を交換し設計値へリセットします。</textarea></td>
-            <td><input type="text" value="90" oninput="myData[35].no=this.value"></td>
-            <td><button onclick="deleteRow(35)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[36].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ" selected="">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="自動演奏ユニット駆動部クッション交換" oninput="myData[36].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[36].desc=this.value" style="height:45px">ソレノイドの接点を新調。静粛性とデータの再現性を高めます。</textarea></td>
-            <td><input type="text" value="-" oninput="myData[36].no=this.value"></td>
-            <td><button onclick="deleteRow(36)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[37].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通" selected="">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="外装クリーニング（鏡面仕上げ）" oninput="myData[37].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[37].desc=this.value" style="height:45px">小傷やくすみを除去。新品同様の鏡面光沢を再生します。</textarea></td>
-            <td><input type="text" value="-" oninput="myData[37].no=this.value"></td>
-            <td><button onclick="deleteRow(37)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[38].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通" selected="">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ペダル窓フェルト・クッション貼換" oninput="myData[38].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[38].desc=this.value" style="height:45px">ペダル操作時の雑音を解消。反応の良いタッチに戻します。</textarea></td>
-            <td><input type="text" value="-" oninput="myData[38].no=this.value"></td>
-            <td><button onclick="deleteRow(38)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[39].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通" selected="">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="内部清掃・防錆処理" oninput="myData[39].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[39].desc=this.value" style="height:45px">埃を除去し、金属部品の錆を抑制。ピアノの寿命を延ばします。</textarea></td>
-            <td><input type="text" value="-" oninput="myData[39].no=this.value"></td>
-            <td><button onclick="deleteRow(39)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[40].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP" selected="">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="バランスブッシングクロス貼り換え 1台" oninput="myData[40].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[40].desc=this.value" style="height:45px">鍵盤の支点を安定させ、正確なタッチコントロールを可能にします。</textarea></td>
-            <td><input type="text" value="82" oninput="myData[40].no=this.value"></td>
-            <td><button onclick="deleteRow(40)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[41].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ダンパーレバー・ストップレールの調整" oninput="myData[41].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[41].desc=this.value" style="height:45px">ペダルと連動して動く、弦を押さえて弦振動を止めるダンパーの調整です。
-ペダルを踏んだ時、全てのダンパーが同時、かつ適正な高さまで上がる調整で、ハーフペダルの効きを均一にし、音の止まりを確実にします。</textarea></td>
-            <td><input type="text" value="-" oninput="myData[41].no=this.value"></td>
-            <td><button onclick="deleteRow(41)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[42].type=this.value; updateDrop();">
-                    <option value="GP" selected="">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ペダル軸受交換" oninput="myData[42].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[42].desc=this.value" style="height:45px">ペダルを踏んだ時に、カタカタ雑音が出る状態をを修繕します。</textarea></td>
-            <td><input type="text" value="-" oninput="myData[42].no=this.value"></td>
-            <td><button onclick="deleteRow(42)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[43].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP" selected="">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="譜面版ヒンジ交換" oninput="myData[43].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[43].desc=this.value" style="height:45px">開閉を繰り返したり圧力がかかったことにより摩滅、変形がおこり、二の開閉時にの譜面版の落下を改善します。</textarea></td>
-            <td><input type="text" value="-" oninput="myData[43].no=this.value"></td>
-            <td><button onclick="deleteRow(43)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[44].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通" selected="">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="ペダル本体の研磨" oninput="myData[44].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[44].desc=this.value" style="height:45px">錆びて黒ずんだ真鍮製のペダルを磨き新品の時のような黄金色の輝きを取り戻します。</textarea></td>
-            <td><input type="text" value="-" oninput="myData[44].no=this.value"></td>
-            <td><button onclick="deleteRow(44)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[45].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通" selected="">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="バランス・フロントピン磨き" oninput="myData[45].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[45].desc=this.value" style="height:45px">タッチの重さの原因はこのピンの錆びによる摩擦であることが多いです。摩擦相手の鍵盤側のフェルトをヤスリのように削ってしまいます。ピアノの寿命を縮めることを防ぎ、滑らかな手ごたえに改善します。</textarea></td>
-            <td><input type="text" value="-" oninput="myData[45].no=this.value"></td>
-            <td><button onclick="deleteRow(45)" style="cursor:pointer;">消</button></td>
-        </tr><tr>
-            <td>
-                <select class="type-select-master" onchange="myData[46].type=this.value; updateDrop();">
-                    <option value="GP">GP</option>
-                    <option value="UP">UP</option>
-                    <option value="自動演奏/HQ">自動演奏/HQ</option>
-                    <option value="共通" selected="">共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="鍵盤整調" oninput="myData[46].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[46].desc=this.value" style="height:45px">鍵盤の支点と力点で摩擦するクロスとのピンの篏合と、鍵盤が刺さる支点となるピンの摩擦を調整し滑らかな動きを実現します。バランスフロントピン磨きも同時実施をお勧めします。</textarea></td>
-            <td><input type="text" value="" oninput="myData[46].no=this.value"></td>
-            <td><button onclick="deleteRow(46)" style="cursor:pointer;">消</button></td>
-        </tr></tbody>
+            <tbody id="m-body"><tr><td><select class="type-select-master" onchange="myData[0].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ハンマー交換(シャンク付) A1R/A1L/A1S/A1/EA1/Z1 1台" oninput="myData[0].name=this.value; updateDrop();"></td><td><textarea oninput="myData[0].desc=this.value" style="height:45px">専用ハンマーをシャンク毎交換。小型ながら力強い響きを再生します。</textarea></td><td><input type="text" value="1-11" oninput="myData[0].no=this.value"></td><td><button onclick="deleteRow(0)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[1].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ハンマー交換(シャンク付) C1/C1L/C1X/GC1 1台" oninput="myData[1].name=this.value; updateDrop();"></td><td><textarea oninput="myData[1].desc=this.value" style="height:45px">設計に最適化されたハンマーで、バランスの良い明瞭な音色を復活させます。</textarea></td><td><input type="text" value="1-11" oninput="myData[1].no=this.value"></td><td><button onclick="deleteRow(1)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[2].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ハンマー交換(シャンク付) C2/C2L/C2X 1台" oninput="myData[2].name=this.value; updateDrop();"></td><td><textarea oninput="myData[2].desc=this.value" style="height:45px">中型モデルの豊かな響きを支える高品質ハンマーへと刷新します。</textarea></td><td><input type="text" value="1-11" oninput="myData[2].no=this.value"></td><td><button onclick="deleteRow(2)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[3].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ハンマー交換(シャンク付) C3 1台" oninput="myData[3].name=this.value; updateDrop();"></td><td><textarea oninput="myData[3].desc=this.value" style="height:45px">主力モデルの表現力を最大限に引き出すため、厳選されたハンマーへ一新します。</textarea></td><td><input type="text" value="1-11" oninput="myData[3].no=this.value"></td><td><button onclick="deleteRow(3)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[4].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ハンマー交換(シャンク付) C5/C5L/C5X 1台" oninput="myData[4].name=this.value; updateDrop();"></td><td><textarea oninput="myData[4].desc=this.value" style="height:45px">深みのある音色を維持するため、弾力性に優れた新品ハンマーへ交換します。</textarea></td><td><input type="text" value="1-11" oninput="myData[4].no=this.value"></td><td><button onclick="deleteRow(4)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[5].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ハンマー交換(シャンク付) C6/C7/C6X/C7X 1台" oninput="myData[5].name=this.value; updateDrop();"></td><td><textarea oninput="myData[5].desc=this.value" style="height:45px">大型モデル特有の重厚な響きを支える高品質なハンマーへと刷新します。</textarea></td><td><input type="text" value="1-11" oninput="myData[5].no=this.value"></td><td><button onclick="deleteRow(5)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[6].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ハンマー交換(シャンク付) S4/S400B/S4B 1台" oninput="myData[6].name=this.value; updateDrop();"></td><td><textarea oninput="myData[6].desc=this.value" style="height:45px">プレミアムモデル専用の精密なハンマーにより、至高のタッチ、音質を再生します。</textarea></td><td><input type="text" value="1-11" oninput="myData[6].no=this.value"></td><td><button onclick="deleteRow(6)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[7].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ハンマー交換(シャンク付) S6/S600B/S6B 1台" oninput="myData[7].name=this.value; updateDrop();"></td><td><textarea oninput="myData[7].desc=this.value" style="height:45px">演奏家の要求に応える高品位ハンマーにより、圧倒的な響きを再生します。</textarea></td><td><input type="text" value="1-11" oninput="myData[7].no=this.value"></td><td><button onclick="deleteRow(7)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[8].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ハンマー交換(シャンク付) CF/CF3/CF3S/CFX 1台" oninput="myData[8].name=this.value; updateDrop();"></td><td><textarea oninput="myData[8].desc=this.value" style="height:45px">最高峰の演奏に応えるため、極めて精度の高いハンマーへと刷新します。</textarea></td><td><input type="text" value="1-11" oninput="myData[8].no=this.value"></td><td><button onclick="deleteRow(8)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[9].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="鍵盤全面刷新パック" oninput="myData[9].name=this.value; updateDrop();"></td><td><textarea oninput="myData[9].desc=this.value" style="height:45px">鍵盤本体に加え、バックチェック、ブッシング、パンチング、キャブスタンスクリューを同時刷新。ヤマハ本来の理想的な設計値へとリセットし、新車のような完璧な操作感を再生します。</textarea></td><td><input type="text" value="78-90" oninput="myData[9].no=this.value"></td><td><button onclick="deleteRow(9)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[10].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ハンマー整形（ファイリング）" oninput="myData[10].name=this.value; updateDrop();"></td><td><textarea oninput="myData[10].desc=this.value" style="height:45px">フエルト製ハンマーで金属弦を打つことでできた弦跡、変形、により起こる音の硬さを削り取り、理想的な卵型に整えます。</textarea></td><td><input type="text" value="1" oninput="myData[10].no=this.value"></td><td><button onclick="deleteRow(10)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[11].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ハンマーシャンクASSY交換 C1～C5 1台" oninput="myData[11].name=this.value; updateDrop();"></td><td><textarea oninput="myData[11].desc=this.value" style="height:45px">フレンジを含むシャンク全体を交換。タッチのバラツキを解消します。</textarea></td><td><input type="text" value="5-11" oninput="myData[11].no=this.value"></td><td><button onclick="deleteRow(11)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[12].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="サポートAssy交換 1台" oninput="myData[12].name=this.value; updateDrop();"></td><td><textarea oninput="myData[12].desc=this.value" style="height:45px">連打の要であるレペティション機構を一新し、レスポンスを向上させます。</textarea></td><td><input type="text" value="" oninput="myData[12].no=this.value"></td><td><button onclick="deleteRow(12)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[13].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ローラー交換" oninput="myData[13].name=this.value; updateDrop();"></td><td><textarea oninput="myData[13].desc=this.value" style="height:45px">鍵盤の力をハンマーに伝える接点部品を交換。スムーズな連打が可能になります。</textarea></td><td><input type="text" value="6" oninput="myData[13].no=this.value"></td><td><button onclick="deleteRow(13)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[14].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="センターピン取替 1台" oninput="myData[14].name=this.value; updateDrop();"></td><td><textarea oninput="myData[14].desc=this.value" style="height:45px">部品を繋ぐ関節部の摩擦を適正化。戻り不良やスティックを解消します。</textarea></td><td><input type="text" value="" oninput="myData[14].no=this.value"></td><td><button onclick="deleteRow(14)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[15].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="フロントブッシングクロス貼り換え 1台" oninput="myData[15].name=this.value; updateDrop();"></td><td><textarea oninput="myData[15].desc=this.value" style="height:45px">鍵盤の左右ガタつきを抑え、指先の力を正確に伝えます。</textarea></td><td><input type="text" value="87" oninput="myData[15].no=this.value"></td><td><button onclick="deleteRow(15)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[16].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="バランスブッシングクロス貼り換え 1台" oninput="myData[16].name=this.value; updateDrop();"></td><td><textarea oninput="myData[16].desc=this.value" style="height:45px">鍵盤の支点を安定させ、正確なタッチコントロールを可能にします。</textarea></td><td><input type="text" value="86" oninput="myData[16].no=this.value"></td><td><button onclick="deleteRow(16)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[17].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="白鍵貼り換え(アクリライト) 1台" oninput="myData[17].name=this.value; updateDrop();"></td><td><textarea oninput="myData[17].desc=this.value" style="height:45px">変色やヒビを解消し、清潔感と指なじみの良い質感にします。</textarea></td><td><input type="text" value="88" oninput="myData[17].no=this.value"></td><td><button onclick="deleteRow(17)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[18].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="象牙貼り換え 1台" oninput="myData[18].name=this.value; updateDrop();"></td><td><textarea oninput="myData[18].desc=this.value" style="height:45px">天然素材による吸湿性と独特のタッチ感を維持します。</textarea></td><td><input type="text" value="90" oninput="myData[18].no=this.value"></td><td><button onclick="deleteRow(18)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[19].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="黒檀貼り換え 1台" oninput="myData[19].name=this.value; updateDrop();"></td><td><textarea oninput="myData[19].desc=this.value" style="height:45px">天然素材を使用し、滑りにくく重厚な質感の黒鍵に仕上げます。</textarea></td><td><input type="text" value="90" oninput="myData[19].no=this.value"></td><td><button onclick="deleteRow(19)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[20].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="整調（全体精密調整）" oninput="myData[20].name=this.value; updateDrop();"></td><td><textarea oninput="myData[20].desc=this.value" style="height:45px">鍵盤の高さ、深さ、ハンマーの動きを調整します。均一な重さと一体感が戻ります。</textarea></td><td><input type="text" value="-" oninput="myData[20].no=this.value"></td><td><button onclick="deleteRow(20)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[21].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="整音（針入れ・ヴォイシング）" oninput="myData[21].name=this.value; updateDrop();"></td><td><textarea oninput="myData[21].desc=this.value" style="height:45px">ハンマーの弾力を精密に調整。深みのある豊かな響きを可能にします。</textarea></td><td><input type="text" value="1" oninput="myData[21].no=this.value"></td><td><button onclick="deleteRow(21)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[22].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="巻線張替 ～C５ 1台" oninput="myData[22].name=this.value; updateDrop();"></td><td><textarea oninput="myData[22].desc=this.value" style="height:45px">低音の「がなり」を解消し、深い響きを蘇らせます。</textarea></td><td><input type="text" value="" oninput="myData[22].no=this.value"></td><td><button onclick="deleteRow(22)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[23].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="弦全体張替　C3 1台" oninput="myData[23].name=this.value; updateDrop();"></td><td><textarea oninput="myData[23].desc=this.value" style="height:45px">金属疲労した弦を刷新し、透明感のある響きを取り戻します。</textarea></td><td><input type="text" value="" oninput="myData[23].no=this.value"></td><td><button onclick="deleteRow(23)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[24].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="チューニングピン交換 1台" oninput="myData[24].name=this.value; updateDrop();"></td><td><textarea oninput="myData[24].desc=this.value" style="height:45px">ピンの保持力を向上させ、調律の安定性を高めます。</textarea></td><td><input type="text" value="" oninput="myData[24].no=this.value"></td><td><button onclick="deleteRow(24)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[25].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ダンパーフェルト貼り換え 1台" oninput="myData[25].name=this.value; updateDrop();"></td><td><textarea oninput="myData[25].desc=this.value" style="height:45px">止音不良を解消し、クリアな演奏を可能にします。</textarea></td><td><input type="text" value="50" oninput="myData[25].no=this.value"></td><td><button onclick="deleteRow(25)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[26].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP" selected="">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ハンマー交換 1台 (121cm以下)" oninput="myData[26].name=this.value; updateDrop();"></td><td><textarea oninput="myData[26].desc=this.value" style="height:45px">硬化したハンマーを交換。豊かで芯のある音色を再生します。</textarea></td><td><input type="text" value="6-8" oninput="myData[26].no=this.value"></td><td><button onclick="deleteRow(26)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[27].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP" selected="">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ハンマー交換 1台 (131cm以上)" oninput="myData[27].name=this.value; updateDrop();"></td><td><textarea oninput="myData[27].desc=this.value" style="height:45px">硬化したハンマーを交換。豊かで芯のある音色を再生します。</textarea></td><td><input type="text" value="6-8" oninput="myData[27].no=this.value"></td><td><button onclick="deleteRow(27)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[28].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP" selected="">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="バットスプリングコード取換 1台" oninput="myData[28].name=this.value; updateDrop();"></td><td><textarea oninput="myData[28].desc=this.value" style="height:45px">結露や経年劣化で切れやすいシルク製コードを貼り換え、ハンマーの戻り不良を確実に防ぎます。</textarea></td><td><input type="text" value="38" oninput="myData[28].no=this.value"></td><td><button onclick="deleteRow(28)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[29].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP" selected="">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ブライドルテープ取換 1台" oninput="myData[29].name=this.value; updateDrop();"></td><td><textarea oninput="myData[29].desc=this.value" style="height:45px">アクションの連動性を高め、連打性能と確実な動作を回復させます。</textarea></td><td><input type="text" value="23" oninput="myData[29].no=this.value"></td><td><button onclick="deleteRow(29)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[30].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP" selected="">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="センターピン取替 1台" oninput="myData[30].name=this.value; updateDrop();"></td><td><textarea oninput="myData[30].desc=this.value" style="height:45px">部品を繋ぐ関節部の潤滑不良を解消し、スムーズな動きに戻します。</textarea></td><td><input type="text" value="" oninput="myData[30].no=this.value"></td><td><button onclick="deleteRow(30)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[31].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP" selected="">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ダンパーレバーフレンジコード取換 1台" oninput="myData[31].name=this.value; updateDrop();"></td><td><textarea oninput="myData[31].desc=this.value" style="height:45px">止音機構の動作を正常化し、音の濁りを解消します。</textarea></td><td><input type="text" value="37" oninput="myData[31].no=this.value"></td><td><button onclick="deleteRow(31)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[32].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP" selected="">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="マフラーフェルト交換 1台" oninput="myData[32].name=this.value; updateDrop();"></td><td><textarea oninput="myData[32].desc=this.value" style="height:45px">弱音時の音色を心地よい柔らかさに整えます。</textarea></td><td><input type="text" value="100" oninput="myData[32].no=this.value"></td><td><button onclick="deleteRow(32)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[33].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP" selected="">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="フロントブッシングクロス貼換 1台" oninput="myData[33].name=this.value; updateDrop();"></td><td><textarea oninput="myData[33].desc=this.value" style="height:45px">鍵盤の左右ガタと遊びを適正化し、安定したタッチを再生します。</textarea></td><td><input type="text" value="27" oninput="myData[33].no=this.value"></td><td><button onclick="deleteRow(33)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[34].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP" selected="">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="巻線張替 1台" oninput="myData[34].name=this.value; updateDrop();"></td><td><textarea oninput="myData[34].desc=this.value" style="height:45px">錆びたり硬化した低音弦を張り替え、重厚な響きを復活させます。</textarea></td><td><input type="text" value="32" oninput="myData[34].no=this.value"></td><td><button onclick="deleteRow(34)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[35].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP">UP</option><option value="ハイブリッド" selected="">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="筬後ろクッションライニング刷新" oninput="myData[35].name=this.value; updateDrop();"></td><td><textarea oninput="myData[35].desc=this.value" style="height:45px">HQシリーズの劣化ポイント。圧縮変形した部品を交換し設計値へリセットします。</textarea></td><td><input type="text" value="90" oninput="myData[35].no=this.value"></td><td><button onclick="deleteRow(35)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[36].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP">UP</option><option value="ハイブリッド" selected="">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="自動演奏ユニット駆動部クッション交換" oninput="myData[36].name=this.value; updateDrop();"></td><td><textarea oninput="myData[36].desc=this.value" style="height:45px">ソレノイドの接点を新調。静粛性とデータの再現性を高めます。</textarea></td><td><input type="text" value="-" oninput="myData[36].no=this.value"></td><td><button onclick="deleteRow(36)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[37].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通" selected="">共通</option></select></td><td><input type="text" value="外装クリーニング（鏡面仕上げ）" oninput="myData[37].name=this.value; updateDrop();"></td><td><textarea oninput="myData[37].desc=this.value" style="height:45px">小傷やくすみを除去。新品同様の鏡面光沢を再生します。</textarea></td><td><input type="text" value="-" oninput="myData[37].no=this.value"></td><td><button onclick="deleteRow(37)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[38].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通" selected="">共通</option></select></td><td><input type="text" value="ペダル窓フェルト・クッション貼換" oninput="myData[38].name=this.value; updateDrop();"></td><td><textarea oninput="myData[38].desc=this.value" style="height:45px">ペダル操作時の雑音を解消。反応の良いタッチに戻します。</textarea></td><td><input type="text" value="-" oninput="myData[38].no=this.value"></td><td><button onclick="deleteRow(38)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[39].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通" selected="">共通</option></select></td><td><input type="text" value="内部清掃・防錆処理" oninput="myData[39].name=this.value; updateDrop();"></td><td><textarea oninput="myData[39].desc=this.value" style="height:45px">埃を除去し、金属部品の錆を抑制。ピアノの寿命を延ばします。</textarea></td><td><input type="text" value="-" oninput="myData[39].no=this.value"></td><td><button onclick="deleteRow(39)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[40].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP" selected="">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="バランスブッシングクロス貼り換え 1台" oninput="myData[40].name=this.value; updateDrop();"></td><td><textarea oninput="myData[40].desc=this.value" style="height:45px">鍵盤の支点を安定させ、正確なタッチコントロールを可能にします。</textarea></td><td><input type="text" value="82" oninput="myData[40].no=this.value"></td><td><button onclick="deleteRow(40)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[41].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ダンパーレバー・ストップレールの調整" oninput="myData[41].name=this.value; updateDrop();"></td><td><textarea oninput="myData[41].desc=this.value" style="height:45px">ペダルと連動して動く、弦を押さえて弦振動を止めるダンパーの調整です。
+ペダルを踏んだ時、全てのダンパーが同時、かつ適正な高さまで上がる調整で、ハーフペダルの効きを均一にし、音の止まりを確実にします。</textarea></td><td><input type="text" value="-" oninput="myData[41].no=this.value"></td><td><button onclick="deleteRow(41)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[42].type=this.value; updateDrop();"><option value="GP" selected="">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="ペダル軸受交換" oninput="myData[42].name=this.value; updateDrop();"></td><td><textarea oninput="myData[42].desc=this.value" style="height:45px">ペダルを踏んだ時に、カタカタ雑音が出る状態をを修繕します。</textarea></td><td><input type="text" value="-" oninput="myData[42].no=this.value"></td><td><button onclick="deleteRow(42)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[43].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP" selected="">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="譜面版ヒンジ交換" oninput="myData[43].name=this.value; updateDrop();"></td><td><textarea oninput="myData[43].desc=this.value" style="height:45px">開閉を繰り返したり圧力がかかったことにより摩滅、変形がおこり、二の開閉時にの譜面版の落下を改善します。</textarea></td><td><input type="text" value="-" oninput="myData[43].no=this.value"></td><td><button onclick="deleteRow(43)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[44].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通" selected="">共通</option></select></td><td><input type="text" value="ペダル本体の研磨" oninput="myData[44].name=this.value; updateDrop();"></td><td><textarea oninput="myData[44].desc=this.value" style="height:45px">錆びて黒ずんだ真鍮製のペダルを磨き新品の時のような黄金色の輝きを取り戻します。</textarea></td><td><input type="text" value="-" oninput="myData[44].no=this.value"></td><td><button onclick="deleteRow(44)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[45].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通" selected="">共通</option></select></td><td><input type="text" value="バランス・フロントピン磨き" oninput="myData[45].name=this.value; updateDrop();"></td><td><textarea oninput="myData[45].desc=this.value" style="height:45px">タッチの重さの原因はこのピンの錆びによる摩擦であることが多いです。摩擦相手の鍵盤側のフェルトをヤスリのように削ってしまいます。ピアノの寿命を縮めることを防ぎ、滑らかな手ごたえに改善します。</textarea></td><td><input type="text" value="-" oninput="myData[45].no=this.value"></td><td><button onclick="deleteRow(45)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[46].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP">UP</option><option value="ハイブリッド">ハイブリッド</option><option value="共通" selected="">共通</option></select></td><td><input type="text" value="鍵盤整調" oninput="myData[46].name=this.value; updateDrop();"></td><td><textarea oninput="myData[46].desc=this.value" style="height:45px">鍵盤の支点と力点で摩擦するクロスとのピンの篏合と、鍵盤が刺さる支点となるピンの摩擦を調整し滑らかな動きを実現します。バランスフロントピン磨きも同時実施をお勧めします。</textarea></td><td><input type="text" value="" oninput="myData[46].no=this.value"></td><td><button onclick="deleteRow(46)">消</button></td></tr><tr><td><select class="type-select-master" onchange="myData[47].type=this.value; updateDrop();"><option value="GP">GP</option><option value="UP">UP</option><option value="ハイブリッド" selected="">ハイブリッド</option><option value="共通">共通</option></select></td><td><input type="text" value="シャンクストップレール調整" oninput="myData[47].name=this.value; updateDrop();"></td><td><textarea oninput="myData[47].desc=this.value" style="height:45px">消音モード時のハンマーの作動停止位置を精密に再設定します。消音モードＯＮ時に弦をハンマーが弾たたいて生音が出たり、ＯＦＦ時に生のの弦の音が出にくかったりする事を改善します。</textarea></td><td><input type="text" value="" oninput="myData[47].no=this.value"></td><td><button onclick="deleteRow(47)">消</button></td></tr></tbody>
         </table>
     </div>
 </div>
 
 <div class="print-area">
-    <div style="text-align: right; font-size: 11px; margin-bottom: 5px;">作成日：<span id="date-box">2026年2月1日</span></div>
+    <div style="text-align: right; font-size: 11px; margin-bottom: 5px;">作成日：<span id="date-box">2026年2月5日</span></div>
     <div style="text-align: center; border-bottom: 2px solid #000; margin-bottom: 20px;"><h2>環境及び経年劣化への対応（推奨修理のご案内）</h2></div>
-    
     <table class="proposal-table">
         <thead><tr style="background:#f2f2f2;"><th>推奨項目</th><th>内容説明</th><th style="width:60px">No</th><th style="width:140px">概算費用</th><th class="no-print" style="width:30px"></th></tr></thead>
-        <tbody id="p-body">
-            <tr>
-        <td><b>ハンマー整形（ファイリング）</b></td>
-        <td>フエルト製ハンマーで金属弦を打つことでできた弦跡、変形、により起こる音の硬さを削り取り、理想的な卵型に整えます。</td>
-        <td style="text-align:center">1</td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr><tr>
-        <td><b>整音（針入れ・ヴォイシング）</b></td>
-        <td>ハンマーの弾力を精密に調整。深みのある豊かな響きを可能にします。</td>
-        <td style="text-align:center">1</td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr><tr>
-        <td><b>整調（全体精密調整）</b></td>
-        <td>鍵盤の高さ、深さ、ハンマーの動きを調整します。均一な重さと一体感が戻ります。</td>
-        <td style="text-align:center">-</td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr><tr>
-        <td><b>フロントブッシングクロス貼り換え 1台</b></td>
-        <td>鍵盤の左右ガタつきを抑え、指先の力を正確に伝えます。</td>
-        <td style="text-align:center">87</td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr><tr>
-        <td><b>バランスブッシングクロス貼り換え 1台</b></td>
-        <td>鍵盤の支点を安定させ、正確なタッチコントロールを可能にします。</td>
-        <td style="text-align:center">86</td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr><tr>
-        <td><b>バットスプリングコード取換 1台</b></td>
-        <td>結露や経年劣化で切れやすいシルク製コードを貼り換え、ハンマーの戻り不良を確実に防ぎます。</td>
-        <td style="text-align:center">38</td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr><tr>
-        <td><b>マフラーフェルト交換 1台</b></td>
-        <td>弱音時の音色を心地よい柔らかさに整えます。</td>
-        <td style="text-align:center">100</td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr><tr>
-        <td><b>筬後ろクッションライニング刷新</b></td>
-        <td>HQシリーズの劣化ポイント。圧縮変形した部品を交換し設計値へリセットします。</td>
-        <td style="text-align:center">90</td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr><tr>
-        <td><b>ダンパーレバー・ストップレールの調整</b></td>
-        <td>ペダルと連動して動く、弦を押さえて弦振動を止めるダンパーの調整です。
-ペダルを踏んだ時、全てのダンパーが同時、かつ適正な高さまで上がる調整で、ハーフペダルの効きを均一にし、音の止まりを確実にします。</td>
-        <td style="text-align:center">-</td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr><tr>
-        <td><b>ペダル軸受交換</b></td>
-        <td>ペダルを踏んだ時カタカタ雑音が出ているのを修繕します。</td>
-        <td style="text-align:center">-</td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr><tr>
-        <td><b>ペダル本体の研磨</b></td>
-        <td>錆びて黒ずんだ真鍮製のペダルを磨き新品の時のような黄金色の輝きを取り戻します。</td>
-        <td style="text-align:center">-</td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr><tr>
-        <td><b>バランス・フロントピン磨き</b></td>
-        <td>タッチの重さの原因はこのピンの錆びによる摩擦であることが多いです。摩擦相手の鍵盤側のフェルトをヤスリのように削ってしまいます。ピアノの寿命を縮めることを防ぎ、滑らかな手ごたえに改善します。</td>
-        <td style="text-align:center">-</td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr><tr>
-        <td><b>鍵盤整調</b></td>
-        <td>鍵盤の支点と力点で摩擦するクロスとのピンの篏合と、鍵盤が刺さる支点となるピンの摩擦を調整し滑らかな動きを実現します。バランスフロントピン磨きも同時実施をお勧めします。</td>
-        <td style="text-align:center"></td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr><tr>
-        <td><b>弦全体張替　C3 1台</b></td>
-        <td>金属疲労した弦を刷新し、透明感のある響きを取り戻します。</td>
-        <td style="text-align:center"></td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr><tr>
-        <td><b>ハンマー交換(シャンク付) C3 1台</b></td>
-        <td>主力モデルの表現力を最大限に引き出すため、厳選されたハンマーへ一新します。</td>
-        <td style="text-align:center">1-11</td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    </tr></tbody>
+        <tbody id="p-body"></tbody>
     </table>
-
     <div class="notes-area">
         ※ 表示価格はすべて<b>税別</b>価格です。<br>
         ※ 出張費は別途申し受けます。
@@ -990,13 +281,13 @@
     "no": "32"
   },
   {
-    "type": "自動演奏/HQ",
+    "type": "ハイブリッド",
     "name": "筬後ろクッションライニング刷新",
     "desc": "HQシリーズの劣化ポイント。圧縮変形した部品を交換し設計値へリセットします。",
     "no": "90"
   },
   {
-    "type": "自動演奏/HQ",
+    "type": "ハイブリッド",
     "name": "自動演奏ユニット駆動部クッション交換",
     "desc": "ソレノイドの接点を新調。静粛性とデータの再現性を高めます。",
     "no": "-"
@@ -1060,6 +351,12 @@
     "name": "鍵盤整調",
     "desc": "鍵盤の支点と力点で摩擦するクロスとのピンの篏合と、鍵盤が刺さる支点となるピンの摩擦を調整し滑らかな動きを実現します。バランスフロントピン磨きも同時実施をお勧めします。",
     "no": ""
+  },
+  {
+    "type": "ハイブリッド",
+    "name": "シャンクストップレール調整",
+    "desc": "消音モード時のハンマーの作動停止位置を精密に再設定します。消音モードＯＮ時に弦をハンマーが弾たたいて生音が出たり、ＯＦＦ時に生の弦の音が出にくかったりする事を改善します。",
+    "no": ""
   }
 ]
 </script>
@@ -1067,105 +364,63 @@
 <script>
 let myData = JSON.parse(document.getElementById('DATA_JSON').textContent);
 
-function tab(t) {
-    document.getElementById('v-p').style.display = t=='p'?'block':'none';
-    document.getElementById('v-m').style.display = t=='m'?'block':'none';
-    document.getElementById('t-p').className = 'tab-btn' + (t=='p'?' active':'');
-    document.getElementById('t-m').className = 'tab-btn' + (t=='m'?' active':'');
-    if(t=='m') renderM();
+function tab(t){
+    document.getElementById('v-p').style.display = t === 'p' ? 'block' : 'none';
+    document.getElementById('v-m').style.display = t === 'm' ? 'block' : 'none';
+    document.getElementById('t-p').className = 'tab-btn' + (t === 'p' ? ' active' : '');
+    document.getElementById('t-m').className = 'tab-btn' + (t === 'm' ? ' active' : '');
+    if (t === 'm') renderM();
 }
 
-function renderM() {
-    const b = document.getElementById('m-body');
-    b.innerHTML = '';
+function renderM(){
+    const b = document.getElementById('m-body'); b.innerHTML = '';
     myData.forEach((d, i) => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>
-                <select class="type-select-master" onchange="myData[${i}].type=this.value; updateDrop();">
-                    <option value="GP" ${d.type=='GP'?'selected':''}>GP</option>
-                    <option value="UP" ${d.type=='UP'?'selected':''}>UP</option>
-                    <option value="自動演奏/HQ" ${d.type=='自動演奏/HQ'?'selected':''}>自動演奏/HQ</option>
-                    <option value="共通" ${d.type=='共通'?'selected':''}>共通</option>
-                </select>
-            </td>
-            <td><input type="text" value="${d.name}" oninput="myData[${i}].name=this.value; updateDrop();"></td>
-            <td><textarea oninput="myData[${i}].desc=this.value" style="height:45px">${d.desc}</textarea></td>
-            <td><input type="text" value="${d.no}" oninput="myData[${i}].no=this.value"></td>
-            <td><button onclick="deleteRow(${i})" style="cursor:pointer;">消</button></td>
-        `;
+        tr.innerHTML = `<td><select class="type-select-master" onchange="myData[${i}].type=this.value; updateDrop();"><option value="GP" ${d.type==='GP'?'selected':''}>GP</option><option value="UP" ${d.type==='UP'?'selected':''}>UP</option><option value="ハイブリッド" ${d.type==='ハイブリッド'?'selected':''}>ハイブリッド</option><option value="共通" ${d.type==='共通'?'selected':''}>共通</option></select></td><td><input type="text" value="${d.name}" oninput="myData[${i}].name=this.value; updateDrop();"></td><td><textarea oninput="myData[${i}].desc=this.value" style="height:45px">${d.desc}</textarea></td><td><input type="text" value="${d.no}" oninput="myData[${i}].no=this.value"></td><td><button onclick="deleteRow(${i})">消</button></td>`;
         b.appendChild(tr);
     });
 }
 
-function deleteRow(index) {
-    if(confirm('この項目を削除しますか？')) {
-        myData.splice(index, 1);
-        renderM();
-        updateDrop();
-    }
-}
-
-function addNewItem() {
-    myData.push({ type: "GP", name: "（新しい修理項目名）", desc: "説明文を入力", no: "-" });
-    renderM();
-    updateDrop();
-    window.scrollTo(0, document.body.scrollHeight);
-}
-
-function updateDrop() {
-    const type = document.getElementById('sel-type').value;
-    const sel = document.getElementById('sel-item');
+function updateDrop(){
+    const type = document.getElementById('sel-type').value; 
+    const sel = document.getElementById('sel-item'); 
     sel.innerHTML = '';
-    myData.forEach(d => {
-        if(d.type === type) {
-            const o = document.createElement('option');
-            o.text = d.name;
-            sel.appendChild(o);
-        }
+    myData.filter(d => d.type === type).forEach(d => {
+        const opt = document.createElement('option'); 
+        opt.value = d.name; 
+        opt.textContent = d.name; 
+        sel.appendChild(opt);
     });
 }
 
-function addFromSelect() {
-    const name = document.getElementById('sel-item').value;
-    const item = myData.find(d => d.name === name);
+function addFromSelect(){
+    const name = document.getElementById('sel-item').value; 
+    const item = myData.find(d => d.name === name); 
     if(!item) return;
     const tr = document.createElement('tr');
-    tr.innerHTML = `
-        <td><b>${item.name}</b></td>
-        <td>${item.desc}</td>
-        <td style="text-align:center">${item.no}</td>
-        <td>¥ <input type="text" class="price-input" placeholder="0,000"></td>
-        <td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer; font-size:18px;">×</button></td>
-    `;
+    tr.innerHTML = `<td><b>${item.name}</b></td><td>${item.desc}</td><td style="text-align:center">${item.no}</td><td>¥ <input type="text" class="price-input" placeholder="0,000"></td><td class="no-print"><button onclick="this.closest('tr').remove()" style="color:red; border:none; background:none; cursor:pointer;">×</button></td>`;
     document.getElementById('p-body').appendChild(tr);
 }
+
+function deleteRow(i){ if(!confirm('削除しますか？')) return; myData.splice(i, 1); renderM(); updateDrop(); }
+function addNewItem(){ myData.push({type:"GP", name:"新規項目", desc:"", no:""}); renderM(); }
 
 function saveToFile() {
     const jsonStr = JSON.stringify(myData, null, 2);
     let source = document.documentElement.outerHTML;
     const regex = /<script id="DATA_JSON" type="application\/json">[\s\S]*?<\/script>/;
-    const newTag = `<script id="DATA_JSON" type="application\/json">\n${jsonStr}\n<\/script>`;
+    const newTag = `<script id="DATA_JSON" type="application/json">\n${jsonStr}\n<\/script>`;
     const finalHtml = "<!DOCTYPE html>\n" + source.replace(regex, newTag);
     const blob = new Blob([finalHtml], {type: "text/html"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "ピアノ修理提案原本_全データ完全版.html";
+    a.download = "ピアノ修理提案原本_ハイブリッド更新版.html";
     a.click();
-    alert("原本ファイルを更新・保存しました。");
 }
 
-window.onload = function() {
-    const now = new Date();
-    document.getElementById('date-box').textContent = now.getFullYear() + "年" + (now.getMonth() + 1) + "月" + now.getDate() + "日";
-    updateDrop();
+window.onload = () => {
+    const n = new Date(); document.getElementById('date-box').textContent = `${n.getFullYear()}年${n.getMonth()+1}月${n.getDate()}日`;
+    renderM(); updateDrop();
 };
 </script>
-
-
-
-
-
-
 </body></html>
-
